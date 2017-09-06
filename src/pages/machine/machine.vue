@@ -38,18 +38,21 @@
       <el-button @click='addMahineType' type="primary"><i class="fa fa-plus"></i> 新增机器种类</el-button>
     </div>
     <badMachineDialog :getAllMachine="getAllMachine" :dialogTitle="dialogTitle" :machineForm="machineForm" :newMachineBox="newMachineBox" :updateMachine="updateMachine" @closeDialog="newMachineBox=false"></badMachineDialog>
+    <machineTypeDialog :colorArray="colorArray" :newTypeBox="newTypeBox" :getAllMachine="getAllMachine" @closeTypeDialog="newTypeBox=false"></machineTypeDialog>
     <div class="footer"></div>
   </div>
 </template>
 
 <script lang='ts'>
+  import machineTypeDialog from './newTypeDialog'
   import badMachineDialog from './newMachineDialog'
   import {mapGetters} from 'vuex'
   import Vue from 'vue'
   import Component from 'vue-class-component'
   @Component({
     components: {
-      badMachineDialog
+      badMachineDialog,
+      machineTypeDialog
     },
     computed: mapGetters([
       'getUserInfo'
@@ -66,10 +69,11 @@
       repairContent: '',
       breakoutTime: ''
     }
+    newTypeBox:boolean = false
     updateMachine: boolean = false
     newMachineBox: boolean = false
     dialogTitle:string = ''
-    colorArray = ['#20A0FF', '#13CE66', '#F7BA2A', '#FF7F00', '#FFFF00', '#00FFFF', '#8B00FF', '#0000FF', '#1D8CE0']
+    colorArray = ['primary', 'success', 'warning', 'danger', 'Dark Blue', 'Light Blue', 'Gray', 'Light Black', 'Extra Light Silver']
 
 //    methods
     showNewClientBox (): void {
@@ -100,7 +104,8 @@
     }
 
     addMahineType () {
-      console.log(this['getUserInfo'].machineTypes)
+      this.newTypeBox = true
+      console.log(this['getUserInfo'].machineTypes.findIndex((ele) => ele.value === '机械手'))
     }
 
     deleteBadMachine (row): void {

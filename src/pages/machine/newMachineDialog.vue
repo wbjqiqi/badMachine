@@ -3,9 +3,8 @@
     <el-form @keyup.enter.native="newMachineSubmit()" labelPosition="left" :model="machineForm"
              ref="clientBox">
       <el-form-item label="机器名称" prop="name">
-        <el-radio-group v-model="machineForm.name">
-          <el-radio label="注塑机"></el-radio>
-          <el-radio label="机械手"></el-radio>
+        <el-radio-group v-model="machineForm.name" v-for="label in getUserInfo.machineTypes">
+          <el-radio :label=label.text  ></el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="型号" prop="number">

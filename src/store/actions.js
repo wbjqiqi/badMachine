@@ -94,3 +94,21 @@ export const deleteBadMachine = ({commit}, options) => {
     })
   })
 }
+
+export const newMachineType = ({commit}, options) => {
+  options.createUser = localStorage.username
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      api.newMachineType(options).then((res) => {
+        // commit(types.GET_MACHINE, {res: res})
+        if (res.body.msg === 'success') {
+          resolve(res)
+        } else {
+          reject(res)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  })
+}
