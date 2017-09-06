@@ -5,12 +5,12 @@
     <el-table stripe :data='getUserInfo.machines' style="width:100%;overflow-y: auto">
       <el-table-column prop='name' sortable
                        label="机器名称"
-                       :filters="[{ text: '注塑机', value: '注塑机' }, { text: '机械手', value: '机械手' }]"
+                       :filters="getUserInfo.machineTypes"
                        :filter-method="filterTag"
                        filter-placement="bottom-end">
         <template scope="scope">
           <el-tag
-            :type="scope.row.name === '注塑机' ? 'primary' : 'success'"
+            :type="colorArray[getUserInfo.machineTypes.findIndex((ele) => ele.value === scope.row.name)]"
             close-transition>{{scope.row.name}}
           </el-tag>
         </template>
@@ -35,6 +35,7 @@
     <div style="width:100%">
       <el-button @click='showNewClientBox' type="primary"><i class="fa fa-plus"></i> 新增</el-button>
       <el-button @click='getAllMachine' type="info"><i class="fa fa-refresh"></i> 获取所有坏机器</el-button>
+      <el-button @click='addMahineType' type="primary"><i class="fa fa-plus"></i> 新增机器种类</el-button>
     </div>
     <badMachineDialog :getAllMachine="getAllMachine" :dialogTitle="dialogTitle" :machineForm="machineForm" :newMachineBox="newMachineBox" :updateMachine="updateMachine" @closeDialog="newMachineBox=false"></badMachineDialog>
     <div class="footer"></div>
@@ -68,6 +69,7 @@
     updateMachine: boolean = false
     newMachineBox: boolean = false
     dialogTitle:string = ''
+    colorArray = ['#20A0FF', '#13CE66', '#F7BA2A', '#FF7F00', '#FFFF00', '#00FFFF', '#8B00FF', '#0000FF', '#1D8CE0']
 
 //    methods
     showNewClientBox (): void {
@@ -95,6 +97,10 @@
         })
         console.log(err)
       })
+    }
+
+    addMahineType () {
+      console.log(this['getUserInfo'].machineTypes)
     }
 
     deleteBadMachine (row): void {
@@ -130,6 +136,7 @@
     filterTag (value, row) {
       return row.name === value
     }
+
   }
 </script>
 

@@ -10,7 +10,8 @@ const state = {
   //   phone: ''
   // }
   user: '',
-  machines: []
+  machines: [],
+  machineTypes: []
 }
 
 const mutations = {
@@ -28,11 +29,20 @@ const mutations = {
     if (res.res.body.msg !== 'success') {
       return false
     }
-    state.machines = []
-    for (let i in res.res.body.machines) {
-      let machine = res.res.body.machines[i]
-      // machine.breakoutTime = new Date(machine.breakoutTime).toLocaleString()
-      state.machines.push(machine)
+    state.machines = res.res.body.machines
+    // for (let i in res.res.body.machines) {
+    //   let machine = res.res.body.machines[i]
+    //   // machine.breakoutTime = new Date(machine.breakoutTime).toLocaleString()
+    //   state.machines.push(machine)
+    // }
+    state.machineTypes = []
+    for (let j in res.res.body.machineTypes) {
+      let name = res.res.body.machineTypes[j].name
+      let machine = {
+        text: name,
+        value: name
+      }
+      state.machineTypes.push(machine)
     }
   }
 }
