@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '../pages/client/Login'
-import machine from '../pages/client/assign'
+import Login from '../pages/Login'
+import machine from '../pages/machine/machine'
 
 Vue.use(Router)
 
