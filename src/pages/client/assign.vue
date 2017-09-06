@@ -2,13 +2,29 @@
   <div class="bimbox-container">
     <div class="nav">
     </div>
-    <el-table :data='getUserInfo.machines' style="width:100%;">
-      <el-table-column prop='name' label="机器名称"></el-table-column>
-      <el-table-column prop='number' label="型号"></el-table-column>
-      <el-table-column prop='describe' label="描述"></el-table-column>
-      <el-table-column prop='reason' label="损坏原因"></el-table-column>
-      <el-table-column prop='repairContent' label="修复内容"></el-table-column>
-      <el-table-column prop='breakoutTime' label="损坏时间"></el-table-column>
+    <el-table stripe :data='getUserInfo.machines' style="width:100%;overflow-y: auto">
+      <el-table-column prop='name' sortable
+                       label="机器名称"
+                       :filters="[{ text: '注塑机', value: '注塑机' }, { text: '机械手', value: '机械手' }]"
+                       :filter-method="filterTag"
+                       filter-placement="bottom-end">
+        <template scope="scope">
+          <el-tag
+            :type="scope.row.name === '注塑机' ? 'primary' : 'success'"
+            close-transition>{{scope.row.name}}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop='number' sortable
+                       label="型号"></el-table-column>
+      <el-table-column prop='describe' sortable
+                       label="描述"></el-table-column>
+      <el-table-column prop='reason' sortable
+                       label="损坏原因"></el-table-column>
+      <el-table-column prop='repairContent' sortable
+                       label="修复内容"></el-table-column>
+      <el-table-column prop='breakoutTime' sortable
+                       label="损坏时间"></el-table-column>
       <el-table-column label="编辑">
         <template scope="scope">
           <el-button type="primary" icon="edit" size="small" @click="editBadMachine(scope.row)">编辑</el-button>
@@ -17,15 +33,17 @@
       </el-table-column>
     </el-table>
     <div style="width:100%">
-      <el-button @click='showNewClientBox' type="primary" >新增</el-button>
-      <el-button @click='getAllMachine' type="info" >获取所有坏机器</el-button>
+      <el-button @click='showNewClientBox' type="primary"><i class="fa fa-plus"></i> 新增</el-button>
+      <el-button @click='getAllMachine' type="info"><i class="fa fa-refresh"></i> 获取所有坏机器</el-button>
     </div>
-    <el-dialog size="large" title="新增坏机器" v-model="newMachineBox" validator="false">
-      <el-form @keyup.enter.native="" label-posit ion="top" :model="machineFrom"
+    <el-dialog size="small" title="新增坏机器" v-model="newMachineBox" validator="false">
+      <el-form @keyup.enter.native="newMachineSubmit()" labelPosition="left" :model="machineFrom"
                ref="clientBox">
         <el-form-item label="机器名称" prop="name">
-          <el-input v-model="machineFrom.name" auto-complete="off" :autofocus="dialogProjectFormVisible"
-                    ref="machineName"></el-input>
+          <el-radio-group v-model="machineFrom.name">
+            <el-radio label="注塑机"></el-radio>
+            <el-radio label="机械手"></el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="型号" prop="number">
           <el-input v-model="machineFrom.number" auto-complete="off"></el-input>
@@ -40,7 +58,7 @@
           <el-input v-model="machineFrom.repairContent" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="损坏时间" prop="breakoutTime">
-          <el-input v-model="machineFrom.breakoutTime" auto-complete="off" placeholder="请输入几小时以前损坏"></el-input>
+          <el-input v-model="machineFrom.breakoutTime" auto-complete="off" ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -58,46 +76,7 @@
   import {mapGetters, mapActions} from 'vuex'
   export default {
     data () {
-//      const validName = (rule, value, callback) => {
-//        if (value === '') {
-//          callback(new Error('请输入项目名称'))
-//        } else if (!(/^[a-zA-Z0-9_\u4e00-\u9fa5]{2,20}$/.test(value))) {
-//          callback(new Error('请输入2~20之间的字母数字或下划线'))
-//        } else {
-//          callback()
-//        }
-//      }
       return {
-//        machineFromRules: {
-//          name: [{
-//            validator: validName,
-//            trigger: 'blur'
-//          }],
-//          number: [
-//            {
-//              required: false,
-//              message: ''
-//            },
-//            {
-//              type: 'string',
-//              max: 10000,
-//              min: 10,
-//              message: '人数必须是10~10000之间的整数'
-//            }
-//          ],
-//          max_storage_size: [
-//            {
-//              required: true,
-//              message: '请输入整数'
-//            },
-//            {
-//              type: 'number',
-//              max: 2000,
-//              min: 20,
-//              message: '项目存储空间最少20G，最多2T'
-//            }
-//          ]
-//        },
         machineFrom: {
           name: '',
           number: '',
@@ -151,7 +130,8 @@
             number: this.machineFrom.number,
             describe: this.machineFrom.describe,
             reason: this.machineFrom.reason,
-            repairContent: this.machineFrom.repairContent
+            repairContent: this.machineFrom.repairContent,
+            breakoutTime: this.machineFrom.breakoutTime
           }
           this.$store.dispatch('updateBadMachine', data).then((res) => {
             this.newMachineBox = false
@@ -174,7 +154,7 @@
             describe: this.machineFrom.describe,
             reason: this.machineFrom.reason,
             repairContent: this.machineFrom.repairContent,
-            breakoutTime: new Date().getTime() - this.machineFrom.breakoutTime * 3600000
+            breakoutTime: this.machineFrom.breakoutTime
           }
           this.$store.dispatch('newBadMachine', data).then((res) => {
             this.newMachineBox = false
@@ -216,9 +196,13 @@
         this.machineFrom.describe = row.describe ? row.describe : ''
         this.machineFrom.reason = row.reason ? row.reason : ''
         this.machineFrom.repairContent = row.repairContent ? row.repairContent : ''
-        this.machineFrom.breakoutTime = '此项不可修改'
+        this.machineFrom.breakoutTime = row.breakoutTime ? row.breakoutTime : ''
         this.newMachineBox = true
+      },
+      filterTag (value, row) {
+        return row.name === value
       }
+
     },
     created: () => {
     }

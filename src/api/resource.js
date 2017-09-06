@@ -4,7 +4,6 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import * as config from './config'
-import '../mock/bimserver-test'
 
 Vue.use(VueResource)
 

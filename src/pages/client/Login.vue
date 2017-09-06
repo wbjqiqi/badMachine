@@ -70,7 +70,7 @@
         }).catch(err => {
           this.$message({
             type: 'error',
-            message: '用户名或密码错误'
+            message: '用户名或密码错误或服务器错误'
           })
           console.log(err)
         })

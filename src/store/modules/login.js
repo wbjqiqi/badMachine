@@ -31,7 +31,7 @@ const mutations = {
     state.machines = []
     for (let i in res.res.body.machines) {
       let machine = res.res.body.machines[i]
-      machine.breakoutTime = new Date(machine.breakoutTime).toLocaleString()
+      // machine.breakoutTime = new Date(machine.breakoutTime).toLocaleString()
       state.machines.push(machine)
     }
   }
