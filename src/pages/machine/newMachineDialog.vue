@@ -3,7 +3,7 @@
     <el-form @keyup.enter.native="newMachineSubmit()" labelPosition="left" :model="machineForm"
              ref="clientBox">
       <el-form-item label="机器名称" prop="name">
-        <el-radio-group v-model="machineForm.name" v-for="label in getUserInfo.machineTypes">
+        <el-radio-group v-model="machineForm.name" v-for="label in getUserInfo.machineTypes" :key="label.text">
           <el-radio :label=label.text  ></el-radio>
         </el-radio-group>
       </el-form-item>

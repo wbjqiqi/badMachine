@@ -7,7 +7,7 @@
       </el-form-item>
     </el-form>
     <el-tag v-for="(key, index) in getUserInfo.machineTypes"
-      :type="colorArray[index]"
+      :type="colorArray[index]" :key="key.text"
       close-transition>{{key.text}}
     </el-tag>
     <div slot="footer" class="dialog-footer">
